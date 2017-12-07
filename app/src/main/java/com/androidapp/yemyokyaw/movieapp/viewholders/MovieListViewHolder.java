@@ -11,7 +11,6 @@ import com.androidapp.yemyokyaw.movieapp.MovieApp;
 import com.androidapp.yemyokyaw.movieapp.R;
 import com.androidapp.yemyokyaw.movieapp.data.vo.MovieVO;
 import com.androidapp.yemyokyaw.movieapp.delegates.MovieListDelegate;
-import com.androidapp.yemyokyaw.movieapp.models.MovieData;
 
 /**
  * Created by yemyokyaw on 12/5/17.
@@ -40,8 +39,9 @@ public class MovieListViewHolder extends BaseViewHolder<MovieVO> {
         Log.i(MovieApp.LOG_TAG,data.getTitle());
         tvMovieType.setText(data.getRelease_date());
         tvMovieRating.setText(String.valueOf(data.getVote_average()));
-        rbMoviePopular.setRating(data.getPopularity());
+        rbMoviePopular.setRating((data.getPopularity()/250.0f)*5.0f);
         String url = data.getPoster_path();
+        ivMovieImg.setImageResource(R.drawable.movie);
     }
 
     @Override

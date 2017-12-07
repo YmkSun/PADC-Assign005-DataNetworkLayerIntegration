@@ -10,12 +10,7 @@ import android.view.ViewGroup;
 import com.androidapp.yemyokyaw.movieapp.R;
 import com.androidapp.yemyokyaw.movieapp.data.vo.MovieVO;
 import com.androidapp.yemyokyaw.movieapp.delegates.MovieListDelegate;
-import com.androidapp.yemyokyaw.movieapp.models.MovieData;
-import com.androidapp.yemyokyaw.movieapp.models.MovieListData;
 import com.androidapp.yemyokyaw.movieapp.viewholders.MovieListViewHolder;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by yemyokyaw on 12/5/17.
