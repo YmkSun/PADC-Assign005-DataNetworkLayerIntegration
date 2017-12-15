@@ -1,5 +1,6 @@
 package com.androidapp.yemyokyaw.movieapp.viewholders;
 
+import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
@@ -11,6 +12,8 @@ import com.androidapp.yemyokyaw.movieapp.MovieApp;
 import com.androidapp.yemyokyaw.movieapp.R;
 import com.androidapp.yemyokyaw.movieapp.data.vo.MovieVO;
 import com.androidapp.yemyokyaw.movieapp.delegates.MovieListDelegate;
+import com.androidapp.yemyokyaw.movieapp.utils.AppConstants;
+import com.bumptech.glide.Glide;
 
 /**
  * Created by yemyokyaw on 12/5/17.
@@ -40,8 +43,16 @@ public class MovieListViewHolder extends BaseViewHolder<MovieVO> {
         tvMovieType.setText(data.getRelease_date());
         tvMovieRating.setText(String.valueOf(data.getVote_average()));
         rbMoviePopular.setRating((data.getPopularity()/250.0f)*5.0f);
-        String url = data.getPoster_path();
-        ivMovieImg.setImageResource(R.drawable.movie);
+
+        String imgUrl = AppConstants.IMAGE_URL+data.getPoster_path();
+        Log.i("INFO",imgUrl);
+        Glide.with(ivMovieImg.getContext())
+                .load(imgUrl)
+                .centerCrop()
+                .placeholder(R.drawable.movie_photo_placeholder)
+                .error(R.drawable.movie_photo_placeholder)
+                .into(ivMovieImg);
+
     }
 
     @Override
