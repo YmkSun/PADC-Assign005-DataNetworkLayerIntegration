@@ -42,7 +42,7 @@ public class MovieListViewHolder extends BaseViewHolder<MovieVO> {
         Log.i(MovieApp.LOG_TAG,data.getTitle());
         tvMovieType.setText(data.getRelease_date());
         tvMovieRating.setText(String.valueOf(data.getVote_average()));
-        rbMoviePopular.setRating((data.getPopularity()/250.0f)*5.0f);
+        rbMoviePopular.setRating(data.getPopularity()/250.0f);
 
         String imgUrl = AppConstants.IMAGE_URL+data.getPoster_path();
         Log.i("INFO",imgUrl);
