@@ -1,6 +1,7 @@
 package com.androidapp.yemyokyaw.movieapp.activities;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -152,7 +153,8 @@ public class MovieListActivity extends AppCompatActivity implements MovieListDel
 
     @Override
     public void onTapped() {
-
+        Intent intent = MovieDetailActivity.newIntent(getApplicationContext());
+        startActivity(intent);
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -164,4 +166,5 @@ public class MovieListActivity extends AppCompatActivity implements MovieListDel
     public void onErrorInvokingAPI(RestApiEvents.ErrorInvokingAPIEvent event) {
         Snackbar.make(rvMovieList, event.getErrorMsg(), Snackbar.LENGTH_INDEFINITE).show();
     }
+
 }

@@ -26,6 +26,9 @@ public class MovieListViewHolder extends BaseViewHolder<MovieVO> {
     TextView tvMovieType;
     TextView tvMovieRating;
     RatingBar rbMoviePopular;
+    TextView tvOverview;
+
+    private MovieListDelegate mDelegate;
 
     public MovieListViewHolder(View view, MovieListDelegate mlDelegate) {
         super(view);
@@ -34,18 +37,27 @@ public class MovieListViewHolder extends BaseViewHolder<MovieVO> {
         tvMovieRating = (TextView) view.findViewById(R.id.tv_movie_rating_id);
         rbMoviePopular = (RatingBar) view.findViewById(R.id.rb_movie_popular_id);
         ivMovieImg = (ImageView) view.findViewById(R.id.cv_movie_img_id);
+        tvOverview = (TextView) view.findViewById(R.id.btn_movie_overview_id);
+
+        this.mDelegate = mlDelegate;
+
+        view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                mDelegate.onTapped();
+            }
+        });
     }
 
     @Override
     public void setData(MovieVO data) {
         tvMovieTitle.setText(data.getTitle());
-        Log.i(MovieApp.LOG_TAG,data.getTitle());
         tvMovieType.setText(data.getRelease_date());
         tvMovieRating.setText(String.valueOf(data.getVote_average()));
         rbMoviePopular.setRating(data.getPopularity()/250.0f);
 
         String imgUrl = AppConstants.IMAGE_URL+data.getPoster_path();
-        Log.i("INFO",imgUrl);
         Glide.with(ivMovieImg.getContext())
                 .load(imgUrl)
                 .centerCrop()
