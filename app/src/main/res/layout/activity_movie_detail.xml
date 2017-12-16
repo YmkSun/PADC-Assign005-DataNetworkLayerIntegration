@@ -113,6 +113,7 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@color/divider"
                 android:layout_below="@id/fl_movie_detail_redemption">
 
                 <android.support.v7.widget.RecyclerView
@@ -121,6 +122,14 @@
                     android:layout_height="130dp"
                     android:clipToPadding="false"
                     android:scrollbarStyle="outsideOverlay" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/rv_movie_trailer_images"
+                    android:textColor="@color/white_full"
+                    android:layout_margin="@dimen/margin_medium_2"
+                    android:text="@string/redemption_text"/>
 
             </RelativeLayout>
 

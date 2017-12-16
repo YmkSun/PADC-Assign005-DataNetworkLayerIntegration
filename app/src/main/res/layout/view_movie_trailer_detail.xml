@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="170dp"
-    android:layout_height="130dp">
+    android:layout_height="130dp"
+    android:layout_margin="@dimen/margin_medium_2">
 
     <ImageView
         android:id="@+id/iv_movie_trailer_image"
@@ -17,7 +18,7 @@
         android:layout_height="40dp"
         android:src="@drawable/btn_play"
         android:layout_marginTop="30dp"
-        android:layout_centerHorizontal="true"
+        android:layout_marginStart="55dp"
         />
 
-</RelativeLayout>
+</FrameLayout>

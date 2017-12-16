@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 
 import com.androidapp.yemyokyaw.movieapp.R;
 import com.androidapp.yemyokyaw.movieapp.adapters.MovieListRvAdapter;
+import com.androidapp.yemyokyaw.movieapp.adapters.MovieTrailerAdapter;
 import com.androidapp.yemyokyaw.movieapp.delegates.MovieListDelegate;
 
 import butterknife.BindView;
@@ -20,7 +21,7 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieListD
     public RecyclerView rvMovieTrailerImages;
 
 
-    MovieListRvAdapter mMovieListRvAdapter;
+    MovieTrailerAdapter mMovieListRvAdapter;
 
     public static Intent newIntent(Context context) {
         Intent intent = new Intent(context, MovieDetailActivity.class);
@@ -33,7 +34,7 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieListD
         setContentView(R.layout.activity_movie_detail);
         ButterKnife.bind(this,this);
 
-        mMovieListRvAdapter = new MovieListRvAdapter(getApplicationContext(),this);
+        mMovieListRvAdapter = new MovieTrailerAdapter(getApplicationContext(),this);
         rvMovieTrailerImages.setLayoutManager(new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false));
         rvMovieTrailerImages.setAdapter(mMovieListRvAdapter);
     }
