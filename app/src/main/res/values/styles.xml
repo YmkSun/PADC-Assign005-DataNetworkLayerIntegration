@@ -36,6 +36,11 @@
         <item name="android:foreground">@drawable/bg_ripple_white</item>
     </style>
 
+    <style name="PrimaryBorderButton" parent="AppButton">
+        <item name="android:background">@drawable/bg_round_primary_border</item>
+        <item name="android:foreground">@drawable/bg_ripple_white</item>
+    </style>
+
     <style name="AppButtonSmall">
         <item name="android:paddingStart">@dimen/margin_small</item>
         <item name="android:paddingEnd">@dimen/margin_small</item>
@@ -48,6 +53,11 @@
         <item name="android:gravity">center</item>
         <item name="android:fontFamily">sans-serif-condensed</item>
         <item name="android:clickable">true</item>
+    </style>
+
+    <style name="AccentButtonSmall" parent="AppButtonSmall">
+        <item name="android:background">@drawable/bg_round_accent_small</item>
+        <item name="android:foreground">@drawable/bg_ripple_white</item>
     </style>
 
 </resources>

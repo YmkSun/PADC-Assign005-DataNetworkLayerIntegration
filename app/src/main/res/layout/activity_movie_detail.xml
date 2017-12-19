@@ -15,7 +15,8 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:fitsSystemWindows="true">
 
             <RelativeLayout
                 android:id="@+id/rl_movie_detail_header"
@@ -140,31 +141,58 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/divider"
+                android:background="@color/detail_bg"
                 android:layout_below="@id/fl_movie_detail_redemption">
+
+                <GridView
+                    android:id="@+id/gv_genere_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:columnWidth="90dp"
+                    android:numColumns="auto_fit"
+                    android:verticalSpacing="10dp"
+                    android:horizontalSpacing="10dp"
+                    android:stretchMode="columnWidth"
+                    android:gravity="center"
+                    android:layout_marginTop="@dimen/margin_medium"
+                    android:layout_marginStart="@dimen/margin_medium"
+                    android:layout_marginEnd="@dimen/margin_medium"
+                    />
 
                 <TextView
                     android:id="@+id/btn_type_detail_id"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/margin_medium"
-                    style="@style/PrimaryButton"
-                    android:text="@string/btn_movie_overview"/>
+                    style="@style/PrimaryBorderButton"
+                    android:layout_below="@id/gv_genere_list"
+                    android:text="@string/movie_time"/>
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/rv_movie_trailer_images"
                     android:layout_width="match_parent"
-                    android:layout_height="130dp"
+                    android:layout_height="wrap_content"
                     android:clipToPadding="false"
                     android:scrollbarStyle="outsideOverlay"
                     android:layout_below="@id/btn_type_detail_id"/>
 
                 <TextView
+                    android:id="@+id/tv_movie_review"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_medium"
+                    android:layout_marginStart="@dimen/margin_medium"
+                    android:layout_below="@id/rv_movie_trailer_images"
+                    android:textSize="@dimen/text_regular_3x"
+                    android:textColor="@color/white_full"
+                    android:text="@string/movie_review"/>
+
+                <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/rv_movie_trailer_images"
+                    android:layout_below="@id/tv_movie_review"
                     android:textColor="@color/white_full"
-                    android:layout_margin="@dimen/margin_medium_2"
+                    android:layout_margin="@dimen/margin_medium"
                     android:text="@string/redemption_text"/>
 
             </RelativeLayout>
