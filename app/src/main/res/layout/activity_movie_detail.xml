@@ -38,7 +38,7 @@
                     />
 
                 <ImageView
-                    android:id="@+id/cv_movie_detail_img_id"
+                    android:id="@+id/iv_movie_detail_img_id"
                     android:layout_width="160dp"
                     android:layout_height="200dp"
                     android:layout_alignParentStart="true"
@@ -72,11 +72,38 @@
                     android:layout_marginBottom="45dp"
                     android:background="#A000"/>
 
+                <TextView
+                    android:id="@+id/tv_movie_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_toEndOf="@id/iv_movie_detail_img_id"
+                    android:textColor="@color/white_full"
+                    android:textSize="@dimen/text_regular_3x"
+                    android:layout_marginStart="@dimen/margin_medium_2"
+                    android:layout_marginTop="@dimen/margin_medium"
+                    android:text="@string/moive_title"/>
+
+                <ScrollView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_below="@id/tv_movie_title"
+                    android:layout_toEndOf="@id/iv_movie_detail_img_id"
+                    android:layout_marginBottom="@dimen/margin_medium_2">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/white_full"
+                        android:layout_margin="@dimen/margin_medium_2"
+                        android:text="@string/redemption_text" />
+
+                </ScrollView>
+
                 <RatingBar
                     android:id="@+id/rb_movie_detail_popular_id"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/cv_movie_detail_img_id"
+                    android:layout_below="@id/iv_movie_detail_img_id"
                     style="?android:attr/ratingBarStyleSmall"
                     android:progressTint="@color/colorAccent"
                     android:layout_marginStart="@dimen/margin_medium"
@@ -116,12 +143,21 @@
                 android:background="@color/divider"
                 android:layout_below="@id/fl_movie_detail_redemption">
 
+                <TextView
+                    android:id="@+id/btn_type_detail_id"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/margin_medium"
+                    style="@style/PrimaryButton"
+                    android:text="@string/btn_movie_overview"/>
+
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/rv_movie_trailer_images"
                     android:layout_width="match_parent"
                     android:layout_height="130dp"
                     android:clipToPadding="false"
-                    android:scrollbarStyle="outsideOverlay" />
+                    android:scrollbarStyle="outsideOverlay"
+                    android:layout_below="@id/btn_type_detail_id"/>
 
                 <TextView
                     android:layout_width="match_parent"
