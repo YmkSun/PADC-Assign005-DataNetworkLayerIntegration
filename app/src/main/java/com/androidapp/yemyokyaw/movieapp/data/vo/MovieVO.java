@@ -52,6 +52,34 @@ public class MovieVO {
     @SerializedName("release_date")
     private String release_date;
 
+    public long getId() {
+        return id;
+    }
+
+    public int getVote_count() {
+        return vote_count;
+    }
+
+    public boolean isVideo() {
+        return video;
+    }
+
+    public String getOriginal_language() {
+        return original_language;
+    }
+
+    public String getBackdrop_path() {
+        return backdrop_path;
+    }
+
+    public boolean isAdult() {
+        return adult;
+    }
+
+    public String getOverview() {
+        return overview;
+    }
+
     public float getVote_average() {
         return vote_average;
     }
@@ -71,6 +99,8 @@ public class MovieVO {
     public String getRelease_date() {
         return release_date;
     }
+
+    public int[] getGenre_ids() { return  genre_ids; }
 
     public ContentValues parseToContentValues() {
         ContentValues contentValues = new ContentValues();

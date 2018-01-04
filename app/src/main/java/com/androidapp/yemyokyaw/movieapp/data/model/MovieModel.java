@@ -58,11 +58,35 @@ public class MovieModel {
         moviePageIndex = event.getLoadedPageIndex() + 1;
 
         ContentValues[] movieCVs = new ContentValues[event.getLoadMovies().size()];
+        List<ContentValues> genereCVList = new ArrayList<>();
+        List<ContentValues> movieGenereCVList = new ArrayList<>();
         for(int index = 0; index < movieCVs.length; index++) {
-            movieCVs[index] = event.getLoadMovies().get(index).parseToContentValues();
+
+            MovieVO movie = event.getLoadMovies().get(index);
+            movieCVs[index] = movie.parseToContentValues();
+
+            for (int genereId : movie.getGenre_ids()) {
+
+                ContentValues genereCV = new ContentValues();
+                genereCV.put(MovieAppContracts.GenereEntry.COLUMN_GENERE_ID, genereId);
+                genereCV.put(MovieAppContracts.GenereEntry.COLUMN_GENERE_NAME, "");
+                genereCVList.add(genereCV);
+
+
+                ContentValues movieGenereCV = new ContentValues();
+                movieGenereCV.put(MovieAppContracts.MovieGenereEntry.COLUMN_GENERE_ID, genereId);
+                movieGenereCV.put(MovieAppContracts.MovieGenereEntry.COLUMN_MOVIE_ID, movie.getId());
+                movieGenereCVList.add(movieGenereCV);
+            }
         }
-        int insertedRow = event.getContext().getContentResolver().bulkInsert(MovieAppContracts.MovieEntry.CONTENT_URI, movieCVs);
-        Log.d(MovieApp.LOG_TAG, "Inserted Row:"+insertedRow);
+        int insertedGeneres = event.getContext().getContentResolver().bulkInsert(MovieAppContracts.GenereEntry.CONTENT_URI, genereCVList.toArray(new ContentValues[0]));
+        Log.d(MovieApp.LOG_TAG, "insertedGeneres : " + insertedGeneres);
+
+        int insertedMovies = event.getContext().getContentResolver().bulkInsert(MovieAppContracts.MovieEntry.CONTENT_URI, movieCVs);
+        Log.d(MovieApp.LOG_TAG, "Inserted Row:"+insertedMovies);
+
+        int insertedMovieGeneres = event.getContext().getContentResolver().bulkInsert(MovieAppContracts.MovieGenereEntry.CONTENT_URI, movieGenereCVList.toArray(new ContentValues[0]));
+        Log.d(MovieApp.LOG_TAG, "insertedImagesInNews : " + insertedMovieGeneres);
     }
 
     public void forceRefreshMovie(Context context) {
