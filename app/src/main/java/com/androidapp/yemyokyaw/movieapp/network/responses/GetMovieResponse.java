@@ -1,6 +1,7 @@
 package com.androidapp.yemyokyaw.movieapp.network.responses;
 
 import com.androidapp.yemyokyaw.movieapp.data.vo.MovieVO;
+import com.androidapp.yemyokyaw.movieapp.network.MovieResponse;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
@@ -10,7 +11,7 @@ import java.util.List;
  * Created by yemyokyaw on 12/7/17.
  */
 
-public class GetMovieResponse {
+public class GetMovieResponse extends MovieResponse {
 
     @SerializedName("code")
     private int code;

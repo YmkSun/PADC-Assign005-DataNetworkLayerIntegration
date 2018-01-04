@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.UriMatcher;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -25,28 +26,49 @@ public class MovieProvider extends ContentProvider {
 
     public static MovieDBHelper mDBHelper;
 
+    private static final SQLiteQueryBuilder sMovieWithGenere_IJ;
+
+    static {
+        sMovieWithGenere_IJ = new SQLiteQueryBuilder();
+        sMovieWithGenere_IJ.setTables(
+                MovieAppContracts.MovieEntry.TABLE_NAME + " INNER JOIN " +
+                MovieAppContracts.MovieGenereEntry.TABLE_NAME + " ON " +
+                MovieAppContracts.MovieEntry.TABLE_NAME + "." + MovieAppContracts.MovieEntry.COLUMN_ID + " = " +
+                MovieAppContracts.MovieGenereEntry.TABLE_NAME + "." + MovieAppContracts.MovieGenereEntry.COLUMN_MOVIE_ID +
+                " INNER JOIN " + MovieAppContracts.GenereEntry.TABLE_NAME + " ON " +
+                MovieAppContracts.GenereEntry.TABLE_NAME + "." + MovieAppContracts.GenereEntry.COLUMN_GENERE_ID + " = " +
+                MovieAppContracts.MovieGenereEntry.TABLE_NAME + "." + MovieAppContracts.MovieGenereEntry.COLUMN_GENERE_ID
+        );
+    }
+
     public static UriMatcher buildUriMatcher() {
         UriMatcher uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
-        uriMatcher.addURI(MovieAppContracts.CONTENT_AUTHORITY,MovieAppContracts.PATH_MOVIE,MOVIE);
-        uriMatcher.addURI(MovieAppContracts.CONTENT_AUTHORITY,MovieAppContracts.PATH_GENERE,GENERE);
-        uriMatcher.addURI(MovieAppContracts.CONTENT_AUTHORITY,MovieAppContracts.PATH_MOVIE_GENERE,MOVIE_GENERE);
+        uriMatcher.addURI(MovieAppContracts.CONTENT_AUTHORITY, MovieAppContracts.PATH_MOVIE, MOVIE);
+        uriMatcher.addURI(MovieAppContracts.CONTENT_AUTHORITY, MovieAppContracts.PATH_GENERE, GENERE);
+        uriMatcher.addURI(MovieAppContracts.CONTENT_AUTHORITY, MovieAppContracts.PATH_MOVIE_GENERE, MOVIE_GENERE);
         return uriMatcher;
     }
 
     public String getTableName(Uri uri) {
         switch (sUriMatcher.match(uri)) {
-            case MOVIE: return MovieAppContracts.MovieEntry.TABLE_NAME;
-            case GENERE: return MovieAppContracts.GenereEntry.TABLE_NAME;
-            case MOVIE_GENERE: return MovieAppContracts.MovieGenereEntry.TABLE_NAME;
+            case MOVIE:
+                return MovieAppContracts.MovieEntry.TABLE_NAME;
+            case GENERE:
+                return MovieAppContracts.GenereEntry.TABLE_NAME;
+            case MOVIE_GENERE:
+                return MovieAppContracts.MovieGenereEntry.TABLE_NAME;
         }
         return null;
     }
 
     public Uri getContentUri(Uri uri) {
         switch (sUriMatcher.match(uri)) {
-            case MOVIE: return MovieAppContracts.MovieEntry.CONTENT_URI;
-            case GENERE: return MovieAppContracts.GenereEntry.CONTENT_URI;
-            case MOVIE_GENERE: return MovieAppContracts.MovieGenereEntry.CONTENT_URI;
+            case MOVIE:
+                return MovieAppContracts.MovieEntry.CONTENT_URI;
+            case GENERE:
+                return MovieAppContracts.GenereEntry.CONTENT_URI;
+            case MOVIE_GENERE:
+                return MovieAppContracts.MovieGenereEntry.CONTENT_URI;
         }
         return null;
     }
@@ -60,13 +82,26 @@ public class MovieProvider extends ContentProvider {
     @Nullable
     @Override
     public Cursor query(@NonNull Uri uri, @Nullable String[] projection, @Nullable String selection, @Nullable String[] selectionArgs, @Nullable String sortOrder) {
-        Cursor queryCursor = mDBHelper.getReadableDatabase().query(getTableName(uri),
-                projection,
-                selection,
-                selectionArgs,
-                null,
-                null,
-                sortOrder);
+        Cursor queryCursor;
+        switch (sUriMatcher.match(uri)) {
+            case MOVIE:
+                queryCursor = sMovieWithGenere_IJ.query(mDBHelper.getReadableDatabase(),
+                        projection,
+                        selection,
+                        selectionArgs,
+                        MovieAppContracts.MovieEntry.COLUMN_ID,
+                        null,
+                        sortOrder);
+                break;
+            default:
+                queryCursor = mDBHelper.getReadableDatabase().query(getTableName(uri),
+                        projection,
+                        selection,
+                        selectionArgs,
+                        null,
+                        null,
+                        sortOrder);
+        }
 
         if (getContext() != null) {
             queryCursor.setNotificationUri(getContext().getContentResolver(), uri);
@@ -79,9 +114,12 @@ public class MovieProvider extends ContentProvider {
     @Override
     public String getType(@NonNull Uri uri) {
         switch (sUriMatcher.match(uri)) {
-            case MOVIE: return MovieAppContracts.MovieEntry.DIR_TYPE;
-            case GENERE: return MovieAppContracts.GenereEntry.DIR_TYPE;
-            case MOVIE_GENERE: return MovieAppContracts.MovieGenereEntry.DIR_TYPE;
+            case MOVIE:
+                return MovieAppContracts.MovieEntry.DIR_TYPE;
+            case GENERE:
+                return MovieAppContracts.GenereEntry.DIR_TYPE;
+            case MOVIE_GENERE:
+                return MovieAppContracts.MovieGenereEntry.DIR_TYPE;
         }
         return null;
     }

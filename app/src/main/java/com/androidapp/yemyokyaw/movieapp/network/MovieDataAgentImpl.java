@@ -53,7 +53,7 @@ public class MovieDataAgentImpl implements MovieDataAgent {
     @Override
     public void loadMovies(String accessToken, int pageNo, final Context context) {
         Call<GetMovieResponse> loadMovieCall = theAPI.loadMovie(pageNo,accessToken);
-        loadMovieCall.enqueue(new Callback<GetMovieResponse>() {
+        loadMovieCall.enqueue(new MovieCallback<GetMovieResponse>() {
             @Override
             public void onResponse(Call<GetMovieResponse> call, Response<GetMovieResponse> response) {
                 GetMovieResponse getMovieResponse = response.body();
@@ -61,17 +61,7 @@ public class MovieDataAgentImpl implements MovieDataAgent {
                     RestApiEvents.MovieDataLoadedEvent newsDataLoadedEvent = new RestApiEvents.MovieDataLoadedEvent(
                             getMovieResponse.getPageNo(), getMovieResponse.getMovieList(), context);
                     EventBus.getDefault().post(newsDataLoadedEvent);
-                } else {
-                    RestApiEvents.ErrorInvokingAPIEvent errorEvent
-                            = new RestApiEvents.ErrorInvokingAPIEvent("No data could be loaded for now. Pls try again later.");
-                    EventBus.getDefault().post(errorEvent);
                 }
-            }
-
-            @Override
-            public void onFailure(Call<GetMovieResponse> call, Throwable t) {
-                RestApiEvents.ErrorInvokingAPIEvent errorEvent = new RestApiEvents.ErrorInvokingAPIEvent(t.getMessage());
-                EventBus.getDefault().post(errorEvent);
             }
         });
 
