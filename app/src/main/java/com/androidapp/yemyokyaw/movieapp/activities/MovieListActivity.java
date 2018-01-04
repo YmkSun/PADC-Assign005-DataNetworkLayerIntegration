@@ -2,12 +2,16 @@ package com.androidapp.yemyokyaw.movieapp.activities;
 
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -23,22 +27,33 @@ import com.androidapp.yemyokyaw.movieapp.MovieApp;
 import com.androidapp.yemyokyaw.movieapp.R;
 import com.androidapp.yemyokyaw.movieapp.adapters.MovieListRvAdapter;
 import com.androidapp.yemyokyaw.movieapp.components.SmartScrollListener;
+import com.androidapp.yemyokyaw.movieapp.data.model.MovieModel;
+import com.androidapp.yemyokyaw.movieapp.data.vo.MovieVO;
 import com.androidapp.yemyokyaw.movieapp.delegates.MovieListDelegate;
 import com.androidapp.yemyokyaw.movieapp.events.RestApiEvents;
+import com.androidapp.yemyokyaw.movieapp.persistence.MovieAppContracts;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class MovieListActivity extends AppCompatActivity implements MovieListDelegate, NavigationView.OnNavigationItemSelectedListener {
+public class MovieListActivity extends AppCompatActivity implements MovieListDelegate, NavigationView.OnNavigationItemSelectedListener, LoaderManager.LoaderCallbacks<Cursor> {
+
+    public static final int MOVIE_LIST_LOADER_ID = 1001;
 
     @BindView(R.id.rv_movie_list)
     RecyclerView rvMovieList;
+
+
+    @BindView(R.id.swipe_refresh_layout)
+    SwipeRefreshLayout swipeRefreshLayout;
 
     SmartScrollListener mSmartScrollListener;
     MovieListRvAdapter mMovieListRvAdapter;
@@ -76,10 +91,22 @@ public class MovieListActivity extends AppCompatActivity implements MovieListDel
         mSmartScrollListener = new SmartScrollListener(new SmartScrollListener.OnSmartScrollListener() {
             @Override
             public void onListEndReach() {
-                Snackbar.make(rvMovieList, "This is all the data for NOW.", Snackbar.LENGTH_LONG).show();
+                //Snackbar.make(rvMovieList, "This is all the data for NOW.", Snackbar.LENGTH_LONG).show();
+                MovieModel.getInstance().loadMoreMovie(getApplicationContext());
             }
         });
+
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                MovieModel.getInstance().forceRefreshMovie(getApplicationContext());
+            }
+        });
+
         rvMovieList.addOnScrollListener(mSmartScrollListener);
+
+
+        getSupportLoaderManager().initLoader(MOVIE_LIST_LOADER_ID, null, this);
     }
 
     @Override
@@ -143,6 +170,12 @@ public class MovieListActivity extends AppCompatActivity implements MovieListDel
     protected void onStart() {
         super.onStart();
         EventBus.getDefault().register(this);
+        List<MovieVO> movieList = MovieModel.getInstance().getMovies();
+        if (!movieList.isEmpty()) {
+            mMovieListRvAdapter.setNewData(movieList);
+        } else {
+            swipeRefreshLayout.setRefreshing(true);
+        }
     }
 
     @Override
@@ -158,13 +191,44 @@ public class MovieListActivity extends AppCompatActivity implements MovieListDel
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onNewsDataLoaded(RestApiEvents.MovieDataLoadedEvent event) {
-        mMovieListRvAdapter.appendNewData(event.getLoadMovies());
+    public void onMovieDataLoaded(RestApiEvents.MovieDataLoadedEvent event) {
+        //mMovieListRvAdapter.appendNewData(event.getLoadMovies());
+        //swipeRefreshLayout.setRefreshing(false);
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onErrorInvokingAPI(RestApiEvents.ErrorInvokingAPIEvent event) {
         Snackbar.make(rvMovieList, event.getErrorMsg(), Snackbar.LENGTH_INDEFINITE).show();
+        swipeRefreshLayout.setRefreshing(false);
+    }
+
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        return new CursorLoader(getApplicationContext(),
+                MovieAppContracts.MovieEntry.CONTENT_URI,
+                null,
+                null, null,
+                null);
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        if(data != null && data.moveToFirst()) {
+            List<MovieVO> movieList = new ArrayList<>();
+
+            do {
+                MovieVO news = MovieVO.parseFromCursor(data);
+                movieList.add(news);
+            } while (data.moveToNext());
+
+            mMovieListRvAdapter.setNewData(movieList);
+            swipeRefreshLayout.setRefreshing(false);
+        }
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+
     }
 
 }

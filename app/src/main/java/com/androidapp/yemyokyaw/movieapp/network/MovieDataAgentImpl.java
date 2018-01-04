@@ -1,5 +1,7 @@
 package com.androidapp.yemyokyaw.movieapp.network;
 
+import android.content.Context;
+
 import com.androidapp.yemyokyaw.movieapp.events.RestApiEvents;
 import com.androidapp.yemyokyaw.movieapp.network.responses.GetMovieResponse;
 import com.google.gson.Gson;
@@ -49,7 +51,7 @@ public class MovieDataAgentImpl implements MovieDataAgent {
     }
 
     @Override
-    public void loadMovies(String accessToken, int pageNo) {
+    public void loadMovies(String accessToken, int pageNo, final Context context) {
         Call<GetMovieResponse> loadMovieCall = theAPI.loadMovie(pageNo,accessToken);
         loadMovieCall.enqueue(new Callback<GetMovieResponse>() {
             @Override
@@ -57,7 +59,7 @@ public class MovieDataAgentImpl implements MovieDataAgent {
                 GetMovieResponse getMovieResponse = response.body();
                 if(getMovieResponse != null && getMovieResponse.getMovieList().size()>0) {
                     RestApiEvents.MovieDataLoadedEvent newsDataLoadedEvent = new RestApiEvents.MovieDataLoadedEvent(
-                            getMovieResponse.getPageNo(), getMovieResponse.getMovieList());
+                            getMovieResponse.getPageNo(), getMovieResponse.getMovieList(), context);
                     EventBus.getDefault().post(newsDataLoadedEvent);
                 } else {
                     RestApiEvents.ErrorInvokingAPIEvent errorEvent

@@ -1,5 +1,8 @@
 package com.androidapp.yemyokyaw.movieapp.events;
 
+import android.content.ContentProvider;
+import android.content.Context;
+
 import com.androidapp.yemyokyaw.movieapp.data.vo.MovieVO;
 
 import java.util.List;
@@ -29,10 +32,12 @@ public class RestApiEvents {
     public static class MovieDataLoadedEvent {
         private int loadedPageIndex;
         private List<MovieVO> loadMovies;
+        private Context context;
 
-        public MovieDataLoadedEvent(int loadedPageIndex, List<MovieVO> loadMovies) {
+        public MovieDataLoadedEvent(int loadedPageIndex, List<MovieVO> loadMovies, Context context) {
             this.loadedPageIndex = loadedPageIndex;
             this.loadMovies = loadMovies;
+            this.context = context;
         }
 
         public int getLoadedPageIndex() {
@@ -41,6 +46,10 @@ public class RestApiEvents {
 
         public List<MovieVO> getLoadMovies() {
             return loadMovies;
+        }
+
+        public Context getContext() {
+            return context;
         }
     }
 }
