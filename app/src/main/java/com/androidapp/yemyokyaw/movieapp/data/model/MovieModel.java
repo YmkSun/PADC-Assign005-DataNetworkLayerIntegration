@@ -7,7 +7,7 @@ import android.util.Log;
 import com.androidapp.yemyokyaw.movieapp.MovieApp;
 import com.androidapp.yemyokyaw.movieapp.data.vo.MovieVO;
 import com.androidapp.yemyokyaw.movieapp.events.RestApiEvents;
-import com.androidapp.yemyokyaw.movieapp.network.MovieDataAgentImpl;
+import com.androidapp.yemyokyaw.movieapp.network.MovieDataAgent;
 import com.androidapp.yemyokyaw.movieapp.persistence.MovieAppContracts;
 import com.androidapp.yemyokyaw.movieapp.utils.AppConstants;
 
@@ -16,6 +16,8 @@ import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.inject.Inject;
 
 /**
  * Created by yemyokyaw on 12/6/17.
@@ -28,16 +30,14 @@ public class MovieModel {
     private List<MovieVO> mMovie;
     private int moviePageIndex = 1;
 
-    private MovieModel() {
+    @Inject
+    MovieDataAgent mMovieDataAgent;
+
+    public MovieModel(Context context) {
         EventBus.getDefault().register(this);
         mMovie = new ArrayList<>();
-    }
-
-    public static MovieModel getInstance() {
-        if(objInstance == null) {
-            objInstance = new MovieModel();
-        }
-        return objInstance;
+        MovieApp movieApp = (MovieApp) context.getApplicationContext();
+        movieApp.getMovieAppComponent().inject(this);
     }
 
     public List<MovieVO> getMovies() {
@@ -45,11 +45,11 @@ public class MovieModel {
     }
 
     public void startLoadingMovie(Context context) {
-        MovieDataAgentImpl.getInstance().loadMovies(AppConstants.ACCESS_TOKEN, moviePageIndex, context);
+        mMovieDataAgent.loadMovies(AppConstants.ACCESS_TOKEN, moviePageIndex, context);
     }
 
     public void loadMoreMovie(Context context) {
-        MovieDataAgentImpl.getInstance().loadMovies(AppConstants.ACCESS_TOKEN, moviePageIndex, context);
+        mMovieDataAgent.loadMovies(AppConstants.ACCESS_TOKEN, moviePageIndex, context);
     }
 
     @Subscribe

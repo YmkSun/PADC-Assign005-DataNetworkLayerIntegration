@@ -31,6 +31,8 @@ import com.androidapp.yemyokyaw.movieapp.data.model.MovieModel;
 import com.androidapp.yemyokyaw.movieapp.data.vo.MovieVO;
 import com.androidapp.yemyokyaw.movieapp.delegates.MovieListDelegate;
 import com.androidapp.yemyokyaw.movieapp.events.RestApiEvents;
+import com.androidapp.yemyokyaw.movieapp.mvp.presenters.MovieListPresenter;
+import com.androidapp.yemyokyaw.movieapp.mvp.views.MovieListView;
 import com.androidapp.yemyokyaw.movieapp.persistence.MovieAppContracts;
 
 import org.greenrobot.eventbus.EventBus;
@@ -41,10 +43,12 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class MovieListActivity extends AppCompatActivity implements MovieListDelegate, NavigationView.OnNavigationItemSelectedListener, LoaderManager.LoaderCallbacks<Cursor> {
+public class MovieListActivity extends AppCompatActivity implements MovieListView, NavigationView.OnNavigationItemSelectedListener, LoaderManager.LoaderCallbacks<Cursor> {
 
     public static final int MOVIE_LIST_LOADER_ID = 1001;
 
@@ -58,6 +62,9 @@ public class MovieListActivity extends AppCompatActivity implements MovieListDel
     SmartScrollListener mSmartScrollListener;
     MovieListRvAdapter mMovieListRvAdapter;
 
+    @Inject
+    MovieListPresenter mMovieListPresenter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,6 +72,11 @@ public class MovieListActivity extends AppCompatActivity implements MovieListDel
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         ButterKnife.bind(this,this);
+
+        MovieApp movieApp = (MovieApp) getApplicationContext();
+        movieApp.getMovieAppComponent().inject(this);
+
+        mMovieListPresenter.onCreate(this);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -84,7 +96,7 @@ public class MovieListActivity extends AppCompatActivity implements MovieListDel
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        mMovieListRvAdapter = new MovieListRvAdapter(getApplicationContext(),this);
+        mMovieListRvAdapter = new MovieListRvAdapter(getApplicationContext(),mMovieListPresenter);
         rvMovieList.setLayoutManager(new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false));
         rvMovieList.setAdapter(mMovieListRvAdapter);
 
@@ -92,14 +104,14 @@ public class MovieListActivity extends AppCompatActivity implements MovieListDel
             @Override
             public void onListEndReach() {
                 //Snackbar.make(rvMovieList, "This is all the data for NOW.", Snackbar.LENGTH_LONG).show();
-                MovieModel.getInstance().loadMoreMovie(getApplicationContext());
+                mMovieListPresenter.onLoadMoreMovie(getApplicationContext());
             }
         });
 
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                MovieModel.getInstance().forceRefreshMovie(getApplicationContext());
+                mMovieListPresenter.onForceRefreshMovie(getApplicationContext());
             }
         });
 
@@ -170,24 +182,32 @@ public class MovieListActivity extends AppCompatActivity implements MovieListDel
     protected void onStart() {
         super.onStart();
         EventBus.getDefault().register(this);
-        List<MovieVO> movieList = MovieModel.getInstance().getMovies();
-        if (!movieList.isEmpty()) {
-            mMovieListRvAdapter.setNewData(movieList);
-        } else {
-            swipeRefreshLayout.setRefreshing(true);
-        }
+        mMovieListPresenter.onStart();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mMovieListPresenter.onPause();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mMovieListPresenter.onResume();
     }
 
     @Override
     protected void onStop() {
         super.onStop();
         EventBus.getDefault().unregister(this);
+        mMovieListPresenter.onStop();
     }
 
     @Override
-    public void onTapped() {
-        Intent intent = MovieDetailActivity.newIntent(getApplicationContext());
-        startActivity(intent);
+    protected void onDestroy() {
+        super.onDestroy();
+        mMovieListPresenter.onDestroy();
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -231,4 +251,24 @@ public class MovieListActivity extends AppCompatActivity implements MovieListDel
 
     }
 
+    @Override
+    public Context getContext() {
+        return getApplicationContext();
+    }
+
+    @Override
+    public void displayMovieList(List<MovieVO> movieList) {
+        mMovieListRvAdapter.setNewData(movieList);
+    }
+
+    @Override
+    public void showLoading() {
+        swipeRefreshLayout.setRefreshing(true);
+    }
+
+    @Override
+    public void navigateToMovieDetails(MovieVO movie) {
+        Intent intent = MovieDetailActivity.newIntent(getApplicationContext());
+        startActivity(intent);
+    }
 }
