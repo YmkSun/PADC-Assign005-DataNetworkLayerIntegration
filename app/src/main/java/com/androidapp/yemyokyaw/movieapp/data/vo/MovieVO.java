@@ -1,6 +1,7 @@
 package com.androidapp.yemyokyaw.movieapp.data.vo;
 
 import android.content.ContentValues;
+import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Movie;
 
@@ -104,7 +105,7 @@ public class MovieVO {
 
     public ContentValues parseToContentValues() {
         ContentValues contentValues = new ContentValues();
-        contentValues.put(MovieAppContracts.MovieEntry.COLUMN_ID, id);
+        contentValues.put(MovieAppContracts.MovieEntry.COLUMN_MOVIE_ID, id);
         contentValues.put(MovieAppContracts.MovieEntry.COLUMN_VOTE_COUNT, vote_count);
         contentValues.put(MovieAppContracts.MovieEntry.COLUMN_VIDEO, video);
         contentValues.put(MovieAppContracts.MovieEntry.COLUMN_VOTE_AVERAGE, vote_average);
@@ -119,9 +120,9 @@ public class MovieVO {
         return contentValues;
     }
 
-    public static MovieVO parseFromCursor(Cursor cursor) {
+    public static MovieVO parseFromCursor(Context context, Cursor cursor) {
         MovieVO movie = new MovieVO();
-        movie.id = cursor.getLong(cursor.getColumnIndex(MovieAppContracts.MovieEntry.COLUMN_ID));
+        movie.id = cursor.getLong(cursor.getColumnIndex(MovieAppContracts.MovieEntry.COLUMN_MOVIE_ID));
         movie.vote_count = cursor.getInt(cursor.getColumnIndex(MovieAppContracts.MovieEntry.COLUMN_VOTE_COUNT));
         movie.video = cursor.getInt(cursor.getColumnIndex(MovieAppContracts.MovieEntry.COLUMN_VIDEO))==1?true:(cursor.getInt(cursor.getColumnIndex(MovieAppContracts.MovieEntry.COLUMN_VIDEO))==0?false:null);
         movie.vote_average = cursor.getFloat(cursor.getColumnIndex(MovieAppContracts.MovieEntry.COLUMN_VOTE_AVERAGE));

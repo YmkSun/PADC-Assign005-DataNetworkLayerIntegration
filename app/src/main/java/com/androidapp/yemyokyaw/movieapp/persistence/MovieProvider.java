@@ -26,18 +26,23 @@ public class MovieProvider extends ContentProvider {
 
     public static MovieDBHelper mDBHelper;
 
-    private static final SQLiteQueryBuilder sMovieWithGenere_IJ;
+    private static final SQLiteQueryBuilder sMovieWithMovieGenere_IJ;
+    private static final SQLiteQueryBuilder sMovieGenereWithGenere_IJ;
 
     static {
-        sMovieWithGenere_IJ = new SQLiteQueryBuilder();
-        sMovieWithGenere_IJ.setTables(
-                MovieAppContracts.MovieEntry.TABLE_NAME + " INNER JOIN " +
+        sMovieWithMovieGenere_IJ = new SQLiteQueryBuilder();
+        sMovieWithMovieGenere_IJ.setTables(
+                MovieAppContracts.MovieEntry.TABLE_NAME + " LEFT JOIN " +
                 MovieAppContracts.MovieGenereEntry.TABLE_NAME + " ON " +
-                MovieAppContracts.MovieEntry.TABLE_NAME + "." + MovieAppContracts.MovieEntry.COLUMN_ID + " = " +
-                MovieAppContracts.MovieGenereEntry.TABLE_NAME + "." + MovieAppContracts.MovieGenereEntry.COLUMN_MOVIE_ID +
-                " INNER JOIN " + MovieAppContracts.GenereEntry.TABLE_NAME + " ON " +
-                MovieAppContracts.GenereEntry.TABLE_NAME + "." + MovieAppContracts.GenereEntry.COLUMN_GENERE_ID + " = " +
-                MovieAppContracts.MovieGenereEntry.TABLE_NAME + "." + MovieAppContracts.MovieGenereEntry.COLUMN_GENERE_ID
+                MovieAppContracts.MovieEntry.TABLE_NAME + "." + MovieAppContracts.MovieEntry.COLUMN_MOVIE_ID + " = " +
+                MovieAppContracts.MovieGenereEntry.TABLE_NAME + "." + MovieAppContracts.MovieGenereEntry.COLUMN_MOVIE_ID
+        );
+
+        sMovieGenereWithGenere_IJ = new SQLiteQueryBuilder();
+        sMovieGenereWithGenere_IJ.setTables(
+                MovieAppContracts.MovieGenereEntry.TABLE_NAME + " INNER JOIN " +MovieAppContracts.GenereEntry.TABLE_NAME + " ON " +
+                        MovieAppContracts.GenereEntry.TABLE_NAME + "." + MovieAppContracts.GenereEntry.COLUMN_GENERE_ID + " = " +
+                        MovieAppContracts.MovieGenereEntry.TABLE_NAME + "." + MovieAppContracts.MovieGenereEntry.COLUMN_GENERE_ID
         );
     }
 
@@ -85,11 +90,20 @@ public class MovieProvider extends ContentProvider {
         Cursor queryCursor;
         switch (sUriMatcher.match(uri)) {
             case MOVIE:
-                queryCursor = sMovieWithGenere_IJ.query(mDBHelper.getReadableDatabase(),
+                queryCursor = sMovieWithMovieGenere_IJ.query(mDBHelper.getReadableDatabase(),
                         projection,
                         selection,
                         selectionArgs,
-                        MovieAppContracts.MovieEntry.COLUMN_ID,
+                        MovieAppContracts.MovieEntry.COLUMN_MOVIE_ID,
+                        null,
+                        sortOrder);
+                break;
+            case GENERE:
+                queryCursor = sMovieGenereWithGenere_IJ.query(mDBHelper.getReadableDatabase(),
+                        projection,
+                        selection,
+                        selectionArgs,
+                        null,
                         null,
                         sortOrder);
                 break;

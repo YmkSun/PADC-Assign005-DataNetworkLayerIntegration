@@ -17,17 +17,17 @@ import com.androidapp.yemyokyaw.movieapp.viewholders.MovieTrailerViewHolder;
 public class MovieTrailerAdapter extends RecyclerView.Adapter<MovieTrailerViewHolder> {
 
     private LayoutInflater mLayoutInflator;
-    private MovieListDelegate mNewsItemDelegate;
+    private MovieListDelegate mMoiveItemDelegate;
 
     public MovieTrailerAdapter(Context context, MovieListDelegate newsItemDelegate) {
         mLayoutInflator = LayoutInflater.from(context);
-        mNewsItemDelegate = newsItemDelegate;
+        mMoiveItemDelegate = newsItemDelegate;
     }
 
     @Override
     public MovieTrailerViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View newsItemView = mLayoutInflator.inflate(R.layout.view_movie_trailer_detail, parent, false);
-        return new MovieTrailerViewHolder(newsItemView, mNewsItemDelegate);
+        return new MovieTrailerViewHolder(newsItemView, mMoiveItemDelegate);
     }
 
     @Override

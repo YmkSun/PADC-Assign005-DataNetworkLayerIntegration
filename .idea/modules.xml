@@ -2,10 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://D:\ws\android_ws\PADC_Movie_Assign05\PADC-A005-DataNet.iml" filepath="D:\ws\android_ws\PADC_Movie_Assign05\PADC-A005-DataNet.iml" />
-      <module fileurl="file://$PROJECT_DIR$/PADC_Movie_Assign05.iml" filepath="$PROJECT_DIR$/PADC_Movie_Assign05.iml" />
+      <module fileurl="file://$PROJECT_DIR$/PADC_MoiveApp.iml" filepath="$PROJECT_DIR$/PADC_MoiveApp.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://D:\ws\android_ws\PADC_Movie_Assign05\app\app.iml" filepath="D:\ws\android_ws\PADC_Movie_Assign05\app\app.iml" />
     </modules>
   </component>
 </project>

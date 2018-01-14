@@ -52,6 +52,10 @@ public class MovieListPresenter extends BasePresenter<MovieListView> implements 
         mView.navigateToMovieDetails(movie);
     }
 
+    public void onStartLoadMoive(Context context) {
+        mMovieModel.startLoadingMovie(context);
+    }
+
     public void onLoadMoreMovie(Context context) {
         mMovieModel.loadMoreMovie(context);
     }

@@ -41,29 +41,32 @@ public class MovieListViewHolder extends BaseViewHolder<MovieVO> {
 
         this.mDelegate = mlDelegate;
 
-        view.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
 
-                mDelegate.onTapped();
-            }
-        });
     }
 
     @Override
     public void setData(MovieVO data) {
+        final MovieVO movie = data;
         tvMovieTitle.setText(data.getTitle());
         tvMovieType.setText(data.getRelease_date());
         tvMovieRating.setText(String.valueOf(data.getVote_average()));
-        rbMoviePopular.setRating(data.getPopularity()/250.0f);
+        rbMoviePopular.setRating(data.getPopularity() / 250.0f);
 
-        String imgUrl = AppConstants.IMAGE_URL+data.getPoster_path();
+        String imgUrl = AppConstants.IMAGE_URL + data.getPoster_path();
         Glide.with(ivMovieImg.getContext())
                 .load(imgUrl)
                 .centerCrop()
                 .placeholder(R.drawable.movie_photo_placeholder)
                 .error(R.drawable.movie_photo_placeholder)
                 .into(ivMovieImg);
+
+        tvOverview.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                mDelegate.onTapped(movie);
+            }
+        });
 
     }
 

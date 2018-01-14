@@ -28,7 +28,7 @@ public class MovieAppContracts {
 
         public static final String TABLE_NAME = PATH_MOVIE;
 
-        public static final String COLUMN_ID = "id";
+        public static final String COLUMN_MOVIE_ID = "id";
         public static final String COLUMN_TITLE = "title";
         public static final String COLUMN_BACKDROP_PATH = "backdrop_path";
         public static final String COLUMN_POSTER_PATH = "poster_path";

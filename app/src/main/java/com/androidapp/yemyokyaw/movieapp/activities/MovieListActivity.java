@@ -27,9 +27,7 @@ import com.androidapp.yemyokyaw.movieapp.MovieApp;
 import com.androidapp.yemyokyaw.movieapp.R;
 import com.androidapp.yemyokyaw.movieapp.adapters.MovieListRvAdapter;
 import com.androidapp.yemyokyaw.movieapp.components.SmartScrollListener;
-import com.androidapp.yemyokyaw.movieapp.data.model.MovieModel;
 import com.androidapp.yemyokyaw.movieapp.data.vo.MovieVO;
-import com.androidapp.yemyokyaw.movieapp.delegates.MovieListDelegate;
 import com.androidapp.yemyokyaw.movieapp.events.RestApiEvents;
 import com.androidapp.yemyokyaw.movieapp.mvp.presenters.MovieListPresenter;
 import com.androidapp.yemyokyaw.movieapp.mvp.views.MovieListView;
@@ -77,6 +75,7 @@ public class MovieListActivity extends AppCompatActivity implements MovieListVie
         movieApp.getMovieAppComponent().inject(this);
 
         mMovieListPresenter.onCreate(this);
+        mMovieListPresenter.onStartLoadMoive(getApplicationContext());
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -237,7 +236,7 @@ public class MovieListActivity extends AppCompatActivity implements MovieListVie
             List<MovieVO> movieList = new ArrayList<>();
 
             do {
-                MovieVO news = MovieVO.parseFromCursor(data);
+                MovieVO news = MovieVO.parseFromCursor(getApplicationContext(), data);
                 movieList.add(news);
             } while (data.moveToNext());
 
@@ -268,7 +267,7 @@ public class MovieListActivity extends AppCompatActivity implements MovieListVie
 
     @Override
     public void navigateToMovieDetails(MovieVO movie) {
-        Intent intent = MovieDetailActivity.newIntent(getApplicationContext());
+        Intent intent = MovieDetailActivity.newIntent(getApplicationContext(), String.valueOf(movie.getId()));
         startActivity(intent);
     }
 }

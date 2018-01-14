@@ -31,7 +31,8 @@ public class MovieApp extends Application {
         super.onCreate();
         mMovieAppComponent = initDagger(); //dagger init
         mMovieAppComponent.inject(this); //register consumer
-        mMovieModel.startLoadingMovie(mContext);
+        //joke
+        //tv-series
     }
 
     private MovieAppComponent initDagger() {

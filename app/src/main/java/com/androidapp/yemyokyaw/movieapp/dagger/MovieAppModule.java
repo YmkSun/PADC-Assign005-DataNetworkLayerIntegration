@@ -5,6 +5,8 @@ import android.content.Context;
 import com.androidapp.yemyokyaw.movieapp.MovieApp;
 import com.androidapp.yemyokyaw.movieapp.data.model.MovieModel;
 import com.androidapp.yemyokyaw.movieapp.mvp.presenters.MovieListPresenter;
+import com.androidapp.yemyokyaw.movieapp.network.MovieDataAgent;
+import com.androidapp.yemyokyaw.movieapp.network.MovieDataAgentImpl;
 
 import javax.inject.Singleton;
 
@@ -28,6 +30,10 @@ public class MovieAppModule {
     public Context provideContext() {
         return mApp.getApplicationContext();
     }
+
+    @Provides
+    @Singleton
+    public MovieDataAgent provideMovieDataAgent() { return new MovieDataAgentImpl(); }
 
     @Provides
     @Singleton
